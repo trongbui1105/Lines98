@@ -13,7 +13,7 @@ public class Line98 extends JFrame {
 	public Icon icon[] = new Icon[22];
 	public JButton button[][] = new JButton[9][9];
 	public JMenuItem nextBall[] = new JMenuItem[3];
-	public JMenuItem score = new JMenuItem("0"); 
+	public JMenuItem score = new JMenuItem("0 "); 
 	public int x = -1, y = -1;
 
 	/**
@@ -37,23 +37,23 @@ public class Line98 extends JFrame {
 	 * Create the frame.
 	 */
 	public Line98() {
-		icon[1] = new ImageIcon("Images/big1.png");   
-    	icon[2] = new ImageIcon("Images/big2.png");
-    	icon[3] = new ImageIcon("Images/big3.png");
-    	icon[4] = new ImageIcon("Images/big4.png");
-    	icon[5] = new ImageIcon("Images/big5.png");
+		icon[1] = new ImageIcon("src/Images/big1.png");   
+    	icon[2] = new ImageIcon("src/Images/big2.png");
+    	icon[3] = new ImageIcon("src/Images/big3.png");
+    	icon[4] = new ImageIcon("src/Images/big4.png");
+    	icon[5] = new ImageIcon("src/Images/big5.png");
     	
-    	icon[6] = new ImageIcon("Images/small1.png");
-    	icon[7] = new ImageIcon("Images/small2.png");
-    	icon[8] = new ImageIcon("Images/small3.png");
-    	icon[9] = new ImageIcon("Images/small4.png");
-    	icon[10] = new ImageIcon("Images/small5.png");
+    	icon[6] = new ImageIcon("src/Images/small1.png");
+    	icon[7] = new ImageIcon("src/Images/small2.png");
+    	icon[8] = new ImageIcon("src/Images/small3.png");
+    	icon[9] = new ImageIcon("src/Images/small4.png");
+    	icon[10] = new ImageIcon("src/Images/small5.png");
     	
-    	icon[11] = new ImageIcon("Images/d1.gif");
-		icon[12] = new ImageIcon("Images/d2.gif");
-		icon[13] = new ImageIcon("Images/d3.gif");
-		icon[14] = new ImageIcon("Images/d4.gif");
-		icon[15] = new ImageIcon("Images/d5.gif");
+    	icon[11] = new ImageIcon("src/Images/d1.gif");
+		icon[12] = new ImageIcon("src/Images/d2.gif");
+		icon[13] = new ImageIcon("src/Images/d3.gif");
+		icon[14] = new ImageIcon("src/Images/d4.gif");
+		icon[15] = new ImageIcon("src/Images/d5.gif");
 		
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -74,7 +74,7 @@ public class Line98 extends JFrame {
 		setButton();
 		setTitle("Lines 98");
 		setLayout(new GridLayout(9,9));
-		setSize(520,600);
+		setSize(600,650);
 		setResizable(false);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -89,7 +89,7 @@ public class Line98 extends JFrame {
 		JMenu gameMenu = new JMenu("Game");
 		menuBar.add(gameMenu);
 		
-		JMenuItem newGameItem=new JMenuItem("New Game"); //them vao muc New
+		JMenuItem newGameItem = new JMenuItem("New Game"); //them vao muc New
 		newGameItem.setToolTipText("New Game selected");
 		newGameItem.addActionListener(new ActionListener() {
 			@Override
@@ -98,7 +98,24 @@ public class Line98 extends JFrame {
 				startGame();
 			}
 		});
-		gameMenu.add(newGameItem);	
+		gameMenu.add(newGameItem);
+		
+		JMenuItem saveGameItem = new JMenuItem("Save Game");
+		saveGameItem.setToolTipText("Save Game selected");
+		saveGameItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					saveGame();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		gameMenu.add(saveGameItem);
 		
 		JMenuItem exitItem=new JMenuItem("Exit");//them vao muc exit
 		exitItem.setToolTipText("Exit selected");
@@ -144,7 +161,7 @@ public class Line98 extends JFrame {
 	    	menuBar.add(nextBall[i]);
 	    }
 	    			
-	    Icon scoreIcon = new ImageIcon("Images/score.png");
+	    Icon scoreIcon = new ImageIcon("src/Images/score.png");
 	    score.setIcon(scoreIcon);
 		menuBar.add(score);
 	}
@@ -157,7 +174,7 @@ public class Line98 extends JFrame {
 	}
 	
 	public void drawBall() {
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 9; i++) {	
 			for (int j = 0; j < 9; j++) {
 				button[i][j].setIcon(icon[lineBall.ball[i][j]]);
 			}
@@ -199,15 +216,14 @@ public class Line98 extends JFrame {
 								if (ae.getSource() == button[i][j]) {
 									Icon n = button[i][j].getIcon();
 									if (x != i && y != j && (n == icon[1] || n == icon[2] ||
-										n == icon[3] || n == icon[4] ||n == icon[5] ||
-										n == icon[6] || n == icon[7])) {
+										n == icon[3] || n == icon[4] ||n == icon[5])) {
 										x = i;
 										y = j;
 									} else if (x == i && y == j) {
 										x = y = -1;
-									} else if (x > -1 && y > -1 && (n == icon[0] || n == icon[8] ||
-											n == icon[9] || n == icon[10] ||n == icon[11] ||
-											n == icon[12] || n == icon[13] || n == icon[14])) {
+									} else if (x > -1 && y > -1 && (n == icon[0] || n == icon[6] ||
+											n == icon[7] || n == icon[8] ||n == icon[9] ||
+											n == icon[10])) {
 										if (lineBall.BFS(x, y, i, j)) {
 											lineBall.saveUndo(); // lưu lại trạng thái trước khi di chuyển
 											try {
@@ -218,23 +234,23 @@ public class Line98 extends JFrame {
 											drawBall();
 											if (!lineBall.cutBall()) {
 												lineBall.new3Balls();
-												lineBall.cutBall();
-												displayNextBall();
-												drawBall();
-												x = y = -1;
 											}
+											lineBall.cutBall();
+											displayNextBall();
+											drawBall();
+											x = y = -1;
 										}
+									}
+									bounceBall();
+									player.scores=(int) lineBall.totalResult;
+									score.setText((int) lineBall.totalResult + "  ");
+									try {
+										stopGame();
+									} catch (IOException e) {
+										// TODO: handle exception
 									}
 								}
 							}
-						}
-						bounceBall();
-						player.scores=(int) lineBall.totalResult;
-						score.setText((int) lineBall.totalResult + " ");
-						try {
-							stopGame();
-						} catch (IOException e) {
-							// TODO: handle exception
 						}
 					}
 				});
@@ -254,9 +270,9 @@ public class Line98 extends JFrame {
 	}
 	
 	
-	public void startGame(){
+	public void startGame() {
 		lineBall.startGame();
-		score.setText("0 ");		
+		score.setText("0");		
 		displayNextBall();
 		drawBall();
 		x = y = -1;
@@ -296,6 +312,13 @@ public class Line98 extends JFrame {
 				});
 			}
 		}
+	}
+	
+	public void saveGame() throws IOException {
+		player.setName();
+		topScores.add(player);
+		topScores.showTopScores();
+		startGame();
 	}
 }
 

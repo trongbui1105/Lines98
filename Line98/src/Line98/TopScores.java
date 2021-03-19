@@ -53,7 +53,7 @@ public class TopScores extends JFrame {
 	}
 	
 	public void readFile() throws IOException {	
-		RandomAccessFile in = new RandomAccessFile("TopScores.txt","r");
+		RandomAccessFile in = new RandomAccessFile("src/TopScores.dat","r");
 		for(int i = 0; i < 10; i++) {
 			this.player[i].readData(in);
 		}
@@ -64,20 +64,20 @@ public class TopScores extends JFrame {
 	}
 	
 	public void writeFile() throws IOException {
-		DataOutputStream out = new DataOutputStream(new FileOutputStream("TopScores.txt"));
+		DataOutputStream out = new DataOutputStream(new FileOutputStream("src/TopScores.dat"));
 		for (int i = 0; i < 10; i++) {
 			this.player[i].writeData(out);
 		}
 		out.close();
 	}
 	
-	public void showTopScores()throws IOException{
+	public void showTopScores() throws IOException{
 		readFile();
 		show();
 	}
 	
-	//reset la TopScores
-	public void resetTopScores()throws IOException{
+	
+	public void resetTopScores() throws IOException{
 		new TopScores();
 		writeFile();
 	}	

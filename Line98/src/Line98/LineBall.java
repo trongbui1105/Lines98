@@ -44,6 +44,7 @@ public class LineBall {
 		Point freeCell[] = new Point[3];
 		Random random = new Random();
 		
+		// đặt vào 3 quả bóng lớn
 		if (randomBall(3, freeCell)) {
 			for (int k = 0; k < 3; k++) {
 				i = freeCell[k].x;
@@ -54,6 +55,7 @@ public class LineBall {
 			System.out.println("Game Over !!!");
 		}
 		
+		// đặt vào 3 quả bóng nhỏ
 		if (randomBall(3, freeCell)) {
 			for (int k = 0; k < 3; k++) {
 				i = freeCell[k].x;
@@ -76,13 +78,13 @@ public class LineBall {
 	}
 	
 	public boolean randomBall(int numOfBall, Point[] resultBall) {
-		int countFreeBall = 0;
-		Point checkCell[] = new Point[maxCell * maxCell];
-		boolean boolCheckCell[] = new boolean[maxCell * maxCell];
+		int countFreeBall = 0; // số ô còn trống
+		Point checkCell[] = new Point[maxCell * maxCell]; // lưu các ô còn trống
+		boolean boolCheckCell[] = new boolean[maxCell * maxCell]; // đánh dấu các ô đã có bóng
 		
 		for (int i = 0; i < maxCell; i++) {
 			for (int j = 0; j < maxCell; j++) {
-				if (ball[i][j] == 0) {
+				if (ball[i][j] == 0) { // nếu ô chưa có bóng
 					checkCell[countFreeBall] = new Point(i, j);
 					boolCheckCell[countFreeBall] = true;
 					countFreeBall++;
@@ -100,12 +102,12 @@ public class LineBall {
 		int x;
 		int count = 0;
 		while (count < numOfBall) {
-			x = random.nextInt(countFreeBall);
+			x = random.nextInt(countFreeBall); // chọn ngẫu nhiên 1 ô trống
 			if (boolCheckCell[x]) {
 				boolCheckCell[x] = false;
 				resultBall[count++] = checkCell[x];
 			}
-		}
+		}	
 		return true;
 	}
 	
@@ -160,12 +162,12 @@ public class LineBall {
 		
 		totalResult = totalResultTemp;
 	}
-	
+		
 	public void saveUndo() {
 		for (int i = 0; i < maxCell; i++) {
 			for (int j = 0; j < maxCell; j++) {
 				if (ball[i][j] > 2 * maxColor) {
-					ballTemp[i][j] = ball[i][j] * 2 * maxColor;
+					ballTemp[i][j] = ball[i][j] - 2 * maxColor;
 				} else {
 					ballTemp[i][j] = ball[i][j];
 				}
@@ -176,7 +178,7 @@ public class LineBall {
 			nextColorTemp[k] = nextColor[k];
 		}
 		
-		totalResult = totalResultTemp;
+		totalResultTemp = totalResult;
 	}
 	
 	public boolean cutBall() {
@@ -261,12 +263,12 @@ public class LineBall {
 					// check right diagonal
 					i = numOfRow;
 					j = numOfCol;
-					while (i > 0 && j > 0 && ball[i-1][j+1] == numOfBall) {
+					while (i > 0 && j + 1 < maxCell && ball[i-1][j+1] == numOfBall) {
 						i--;
 						j++;
 					}
 					numOfCount = 0;
-					while (i < maxCell && j < maxCell && ball[i][j] == numOfBall) {
+					while (i < maxCell && j >= 0 && ball[i][j] == numOfBall) {
 						checkBall[i][j] = true;
 						tempBall[numOfCount++] = new Point(i, j);
 						i++;
@@ -312,8 +314,8 @@ public class LineBall {
 		
 		boolean [][] ballCheck = new boolean[maxCell][maxCell];
 		
-		pStart = new Point(si, fi);
-		pFinish = new Point(sj, fj);
+		pStart = new Point(si, sj);
+		pFinish = new Point(fi, fj);
 		
 		// cho pstart vào hàng đợi
 		int numOfQuery = 1;
