@@ -3,13 +3,15 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
+import java.sql.SQLException;
 
 public class Line98 extends JFrame {
 	
 	public LineBall lineBall = new LineBall();
 	public JFrame gameOver = new JFrame(" GameOver !");
 	public Player player = new Player();
-	public TopScores topScores = new TopScores();
+	public int numOfPlayer = player.countPlayer();
+	public TopScores[] topScores = new TopScores[numOfPlayer];
 	public Icon icon[] = new Icon[22];
 	public JButton button[][] = new JButton[9][9];
 	public JMenuItem nextBall[] = new JMenuItem[3];
@@ -135,11 +137,11 @@ public class Line98 extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				try{
-					topScores.showTopScores();						
-				}catch(IOException e1){
-					
+				try {
+					topScores.showTopScores();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
 		});
@@ -281,7 +283,7 @@ public class Line98 extends JFrame {
 	
 	public void stopGame() throws IOException {
 		if (lineBall.gameOver) {
-			topScores.readFile();
+//			topScores.readFile();
 			boolean checkPoint = false;
 			for (int i = 0; i < 10; i++) {
 				if (topScores.player[i].scores < player.scores) {
@@ -291,8 +293,8 @@ public class Line98 extends JFrame {
 			}
 			
 			if (checkPoint) {
-				player.setName();
-				topScores.add(player);
+//				player.setName();
+//				topScores.add(player);
 				topScores.showTopScores();
 				startGame();
 			} else {
@@ -315,8 +317,8 @@ public class Line98 extends JFrame {
 	}
 	
 	public void saveGame() throws IOException {
-		player.setName();
-		topScores.add(player);
+//		player.setName();
+//		topScores.add(player);
 		topScores.showTopScores();
 		startGame();
 	}

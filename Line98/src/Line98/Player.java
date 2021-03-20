@@ -1,13 +1,21 @@
 package Line98;
 
 import java.io.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
 public class Player {
 	
+	public ArrayList<Player> listOfPlayers;
 	public String name;
-	public int scores;
+	public int scores, countPlayer;
 	
 	public Player() {
 		this.name = "";
@@ -19,50 +27,79 @@ public class Player {
 		this.scores = scores;
 	}
 	
-	public void setName() {
-		String nameOfPlayer;
-		nameOfPlayer = JOptionPane.showInputDialog("Nhập tên của bạn: ");
-		this.name = nameOfPlayer;
-	}
+//	public void setName() {
+//		String nameOfPlayer;
+//		nameOfPlayer = JOptionPane.showInputDialog("Nhập tên của bạn: ");
+//		this.name = nameOfPlayer;
+//	}
 	
-	public void writeFixedString(String s, int size, DataOutput out) throws IOException{
-		int i;
-		for (i = 0; i < size; i++){
-			char ch = 0;
-		    if (i < s.length()) {
-		    	ch = s.charAt(i);
-		    }
-		    out.writeChar(ch);
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getScores() {
+		return scores;
+	}
+
+	public void setScores(int scores) {
+		this.scores = scores;
+	}
+
+	public Connection getConnection() {
+		Connection conn = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+			String connStr = "jdbc:mysql://127.0.0.1/line98?user=root&password=bqt110500";
+			conn = DriverManager.getConnection(connStr);
+//			System.out.println("Kết nối thành công");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("Kết nối không thành công");
 		}
+		return conn;
 	}
 	
-	public String readFixedString(int size, DataInput in) throws IOException {
-		StringBuilder str = new StringBuilder(size);
-		int i = 0;
-		boolean more = true;
-		while (more && i < size) {
-			char ch = in.readChar();
-			i++;
-			if (ch == 0) {
-				more = false;
-			} else {
-				str.append(ch);
+	public ArrayList<Player> getListPlayer() throws SQLException {
+		listOfPlayers = new ArrayList<>();
+		String sql = "call sortPlayerScores()";
+		try {
+			CallableStatement cStmt = getConnection().prepareCall(sql);
+			ResultSet rs = cStmt.executeQuery();
+			while (rs.next()) {
+				Player p = new Player();
+				p.setName(rs.getString("nameOfPlayer"));
+				p.setScores(rs.getInt("scores"));
+				listOfPlayers.add(p);
 			}
+			getConnection().close();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		in.skipBytes(2 * (size - i));
-		return str.toString();
+		return listOfPlayers;
 	}
 	
-	public void writeData(DataOutput out) throws IOException {
-		writeFixedString(this.name, 20 , out);
-		out.writeInt(this.scores);
-	}
 	
-	public void readData(DataInput in) throws IOException {
-		this.name = readFixedString(20, in);
-		this.scores = in.readInt();
+	public int countPlayer() {
+		String sql = "call countPlayer()";
+		try {
+			CallableStatement cStmt = getConnection().prepareCall(sql);
+			ResultSet rs = cStmt.executeQuery();
+			while (rs.next()) {
+				countPlayer = rs.getInt("countPlayer");
+			}
+			getConnection().close();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return countPlayer;
 	}
-	
 }
 
 
