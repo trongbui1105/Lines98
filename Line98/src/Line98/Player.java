@@ -64,7 +64,7 @@ public class Player {
 		return conn;
 	}
 	
-	public ArrayList<Player> getListPlayer() throws SQLException {
+	public ArrayList<Player> getListPlayer() {
 		listOfPlayers = new ArrayList<>();
 		String sql = "call sortPlayerScores()";
 		try {

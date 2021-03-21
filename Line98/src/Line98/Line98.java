@@ -11,7 +11,7 @@ public class Line98 extends JFrame {
 	public JFrame gameOver = new JFrame(" GameOver !");
 	public Player player = new Player();
 	public int numOfPlayer = player.countPlayer();
-	public TopScores[] topScores = new TopScores[numOfPlayer];
+	public TopScores topScores = new TopScores();
 	public Icon icon[] = new Icon[22];
 	public JButton button[][] = new JButton[9][9];
 	public JMenuItem nextBall[] = new JMenuItem[3];
@@ -108,13 +108,7 @@ public class Line98 extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				try {
-					saveGame();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				saveGame();
 			}
 		});
 		gameMenu.add(saveGameItem);
@@ -137,12 +131,8 @@ public class Line98 extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					topScores.showTopScores();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				topScores.showTopScores();
+				topScores.setVisible(true);
 			}
 		});
 		gameUtilities.add(topScoresItem);
@@ -285,12 +275,12 @@ public class Line98 extends JFrame {
 		if (lineBall.gameOver) {
 //			topScores.readFile();
 			boolean checkPoint = false;
-			for (int i = 0; i < 10; i++) {
-				if (topScores.player[i].scores < player.scores) {
-					checkPoint = true;
-					break;
-				}
-			}
+//			for (int i = 0; i < 10; i++) {
+//				if (topScores.player[i].scores < player.scores) {
+//					checkPoint = true;
+//					break;
+//				}
+//			}
 			
 			if (checkPoint) {
 //				player.setName();
@@ -316,7 +306,7 @@ public class Line98 extends JFrame {
 		}
 	}
 	
-	public void saveGame() throws IOException {
+	public void saveGame() {
 //		player.setName();
 //		topScores.add(player);
 		topScores.showTopScores();
