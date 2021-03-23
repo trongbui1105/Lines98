@@ -13,9 +13,9 @@ public class Line98 extends JFrame {
 	public int numOfPlayer = player.countPlayer();
 	public TopScores topScores = new TopScores();
 	public Icon icon[] = new Icon[22];
-	public JButton button[][] = new JButton[9][9];
+	public static JButton button[][] = new JButton[9][9];
 	public JMenuItem nextBall[] = new JMenuItem[3];
-	public JMenuItem score = new JMenuItem("0 "); 
+	public JMenuItem score = new JMenuItem("0"); 
 	public int x = -1, y = -1;
 
 	/**
@@ -241,11 +241,11 @@ public class Line98 extends JFrame {
 									bounceBall();
 									player.scores=(int) lineBall.totalResult;
 									score.setText((int) lineBall.totalResult + "  ");
-									try {
-										stopGame();
-									} catch (IOException e) {
-										// TODO: handle exception
-									}
+//									try {
+//										stopGame();
+//									} catch (IOException e) {
+//										// TODO: handle exception
+//									}
 								}
 							}
 						}
@@ -263,6 +263,7 @@ public class Line98 extends JFrame {
 				button[i1][j1].setIcon(icon[k - 10]);
 			}
 			button[i][j].setIcon(icon[0]);
+			
 		}
 	}
 	
@@ -278,18 +279,9 @@ public class Line98 extends JFrame {
 	
 	public void stopGame() throws IOException {
 		if (lineBall.gameOver) {
-//			topScores.readFile();
 			boolean checkPoint = false;
-//			for (int i = 0; i < 10; i++) {
-//				if (topScores.player[i].scores < player.scores) {
-//					checkPoint = true;
-//					break;
-//				}
-//			}
-			
 			if (checkPoint) {
 				player.saveGame();
-//				topScores.add(player);
 				topScores.showTopScores();
 				startGame();
 			} else {
@@ -313,10 +305,21 @@ public class Line98 extends JFrame {
 	
 	public void saveGame() {
 		player.saveGame();
-//		topScores.add(player);
+		topScores = new TopScores();
 		topScores.showTopScores();
+		topScores.setVisible(true);
 		startGame();
 	}
+
+	public static JButton[][] getButton() {
+		return button;
+	}
+
+	public void setButton(JButton[][] button) {
+		this.button = button;
+	}
+	
+	
 }
 
 

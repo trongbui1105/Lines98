@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.util.*;
 
 public class LineBall {
+	public Line98 line;
 	
 	public class Point {
 		public int x, y;
@@ -316,6 +317,8 @@ public class LineBall {
 		
 		pStart = new Point(si, sj);
 		pFinish = new Point(fi, fj);
+		JButton[][] button = Line98.getButton();
+		Icon icon = button[si][sj].getIcon();
 		
 		// cho pstart vào hàng đợi
 		int numOfQuery = 1;
@@ -349,7 +352,15 @@ public class LineBall {
 					if (i >= 0 && i < maxCell && j >= 0 && j < maxCell && !ballCheck[i][j]) {
 						query[1][numOfCount++] = new Point(i, j);
 						ballCheck[i][j] = true;
-						pathBallTemp[i][j] = new Point(pCurrent.x, pCurrent.y);
+						button[i][j].setIcon(icon);
+						try {
+							repaint();
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						pathBallTemp[i][j] = new Point(pCurrent.x, pCurrent.y); 
 						// tìm thấy ô đích thì ngưng tìm kiếm
 						if (ballCheck[fi][fj]) {
 							numOfCountPath = 0;

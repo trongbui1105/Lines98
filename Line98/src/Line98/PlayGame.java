@@ -15,6 +15,6 @@ public class PlayGame {
 //		for (Player p : list) {
 //			System.out.println(p.getName() + " " + p.getScores());
 //		}
-	}
+	} 
 
 }

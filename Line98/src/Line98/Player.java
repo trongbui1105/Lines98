@@ -16,6 +16,8 @@ public class Player {
 	public ArrayList<Player> listOfPlayers;
 	public String name;
 	public int scores, countPlayer;
+	public Player newPlayer;
+	public LineBall lineBall;
 	
 	public Player() {
 		this.name = "";
@@ -98,9 +100,22 @@ public class Player {
 
 	
 	public void saveGame() {
-		String nameOfPlayer;
-		nameOfPlayer = JOptionPane.showInputDialog("Nhập tên của bạn: ");
-		this.name = nameOfPlayer;
+		String nameOfNewPlayer;
+		nameOfNewPlayer = JOptionPane.showInputDialog("Nhập tên của bạn: ");
+		int scoresOfNewPlayer = this.scores;
+		String sql = "call insertPlayer(?, ?)";
+		try {
+			CallableStatement cStmt = getConnection().prepareCall(sql);
+			cStmt.setString(1, nameOfNewPlayer);
+			cStmt.setInt(2, scoresOfNewPlayer);
+			ResultSet rs = cStmt.executeQuery();
+			JOptionPane.showMessageDialog(null, "Save Succesfully!");
+			getConnection().close();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, "Save Failed!");
+			e1.printStackTrace();
+		}
 	}
 }
 

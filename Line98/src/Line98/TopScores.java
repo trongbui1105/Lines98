@@ -36,7 +36,7 @@ public class TopScores extends JFrame {
 		for (Player p : list) {
 			number[i] = new JButton((i + 1) + ". " + p.getName() + " : " + p.getScores());
 			panel.add(number[i]);
-			i++;
+			i++; 
 		}
 	}
 	
