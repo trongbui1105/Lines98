@@ -16,25 +16,30 @@ public class TopScores extends JFrame {
 	public JButton number[] = new JButton[player.countPlayer()];
 	ArrayList<Player> list = new ArrayList<>();
 	public int countPlayer = player.countPlayer();
+	public JScrollPane scrollPane;
+	public JPanel panel;
+
 	
 	public TopScores() {
-//		showTopScores();
 		setTitle("TopScores");
 		setSize(200,320);
-		setLayout(new GridLayout(countPlayer,1));
-		setResizable(false);	
+		panel = new JPanel(new GridLayout(0, 1));
+		scrollPane = new JScrollPane(panel);
+		add(scrollPane);
+		setResizable(false);
 	}
-	
+
 	
 	public void showTopScores() {
 		int i = 0;
 		list = player.getListPlayer();
 		for (Player p : list) {
 			number[i] = new JButton((i + 1) + ". " + p.getName() + " : " + p.getScores());
-			add(number[i]);
+			panel.add(number[i]);
 			i++;
 		}
 	}
+	
 	
 	
 	public void resetTopScores() {

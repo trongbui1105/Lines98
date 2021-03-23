@@ -27,12 +27,6 @@ public class Player {
 		this.scores = scores;
 	}
 	
-//	public void setName() {
-//		String nameOfPlayer;
-//		nameOfPlayer = JOptionPane.showInputDialog("Nhập tên của bạn: ");
-//		this.name = nameOfPlayer;
-//	}
-	
 	public String getName() {
 		return name;
 	}
@@ -99,6 +93,14 @@ public class Player {
 			e1.printStackTrace();
 		}
 		return countPlayer;
+	}
+	
+
+	
+	public void saveGame() {
+		String nameOfPlayer;
+		nameOfPlayer = JOptionPane.showInputDialog("Nhập tên của bạn: ");
+		this.name = nameOfPlayer;
 	}
 }
 

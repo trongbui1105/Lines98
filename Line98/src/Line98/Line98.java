@@ -75,7 +75,11 @@ public class Line98 extends JFrame {
 		setMenu();
 		setButton();
 		setTitle("Lines 98");
-		setLayout(new GridLayout(9,9));
+		GridLayout gridLayout = new GridLayout(9, 9);
+	    gridLayout.setHgap(-4);
+	    gridLayout.setVgap(-4);
+		setLayout(gridLayout);
+		
 		setSize(600,650);
 		setResizable(false);
 		setVisible(true);
@@ -131,6 +135,7 @@ public class Line98 extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				topScores = new TopScores();
 				topScores.showTopScores();
 				topScores.setVisible(true);
 			}
@@ -283,7 +288,7 @@ public class Line98 extends JFrame {
 //			}
 			
 			if (checkPoint) {
-//				player.setName();
+				player.saveGame();
 //				topScores.add(player);
 				topScores.showTopScores();
 				startGame();
@@ -307,7 +312,7 @@ public class Line98 extends JFrame {
 	}
 	
 	public void saveGame() {
-//		player.setName();
+		player.saveGame();
 //		topScores.add(player);
 		topScores.showTopScores();
 		startGame();
