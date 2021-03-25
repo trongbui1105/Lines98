@@ -25,13 +25,13 @@ public class LineBall {
     public final int maxColor = 5;
     public int ball[][]= new int[maxCell][maxCell];
     public int ballTemp[][] = new int[maxCell][maxCell];
-	public static Point[] pathBall = new Point[maxCell * maxCell];
+	public Point[] pathBall = new Point[maxCell * maxCell];
 	public int nextColor[] = new int[3];
 	public int nextColorTemp[] = new int[3];
 	public int numOfCountPath;
 	public double totalResult, totalResultTemp;
 	boolean gameOver;
-	public static ArrayList<Point> pathOfBall;
+	public Point[] pathOfBall = new Point[maxCell * maxCell];
 	public Icon icon = new ImageIcon();
 	
 	public LineBall() {
@@ -303,12 +303,16 @@ public class LineBall {
 	
 	// save path
 	public void findPath(Point p, Point [][] pathBallTemp) {
-		if (p.x != -1 && p.y != -1) {
-			if (pathBallTemp[p.x][p.y] != new Point(-1, -1)) {
-				findPath(pathBallTemp[p.x][p.y], pathBallTemp);
-			}
-			pathBall[numOfCountPath++] = p;
-		}
+//		if (p.x != -1 && p.y != -1) {
+//			if (pathBallTemp[p.x][p.y] != new Point(-1, -1)) {
+//				findPath(pathBallTemp[p.x][p.y], pathBallTemp);
+//			}
+//		}
+//		pathBall[numOfCountPath++] = p;
+		if(p.x!=-1 && p.y!=-1)
+		       if (pathBallTemp[p.x][p.y] != new Point(-1,-1))
+				findPath(pathBallTemp[p.x][p.y],pathBallTemp);												
+			pathBall[numOfCountPath++]=p;
 	}
 	
 	// tìm đường đi ngắn nhất từ (si, sj) -> (fi, fj)
@@ -316,7 +320,6 @@ public class LineBall {
 		int []di = {-1, 1, 0, 0};
 		int []dj = {0, 0, -1, 1};
 		int i, j, k, numOfCount;
-		int n = 0;
 		Point pStart, pFinish, pCurrent;
 		Point [][] query = new Point[2][maxCell * maxCell];
 		Point [][] pathBallTemp = new Point[maxCell][maxCell];
@@ -325,8 +328,6 @@ public class LineBall {
 		
 		pStart = new Point(si, sj);
 		pFinish = new Point(fi, fj);
-//		JButton[][] button = Line98.getButton();
-//		icon = button[pStart.x][pStart.y].getIcon();
 		// cho pstart vào hàng đợi
 		int numOfQuery = 1;
 		query[0][0] = pStart;
@@ -351,6 +352,7 @@ public class LineBall {
 			numOfCount = 0;
 			for (int nLast = 0; nLast < numOfQuery; nLast++) {
 				pCurrent = query[0][nLast];
+				
 				// tìm xung quanh 4 hướng của ô (i, j) xem có hướng nào đi được hay không ?
 				for (k = 0; k < 4; k++) {
 					i = pCurrent.x + di[k];
@@ -358,8 +360,8 @@ public class LineBall {
 					if (i >= 0 && i < maxCell && j >= 0 && j < maxCell && !ballCheck[i][j]) {
 						query[1][numOfCount++] = new Point(i, j);
 						ballCheck[i][j] = true;
-//						pathOfBall.add(new Point(i, j));
 						pathBallTemp[i][j] = new Point(pCurrent.x, pCurrent.y); 
+						
 						// tìm thấy ô đích thì ngưng tìm kiếm
 						if (ballCheck[fi][fj]) {
 							numOfCountPath = 0;
@@ -374,27 +376,24 @@ public class LineBall {
 				query[0][k] = query[1][k];
 			}
 			numOfQuery = numOfCount;
+//			for(int n = 0; n < pathBall.length; n++) {
+//				System.out.println(pathBall[n].x + " " + pathBall[n].y);
+//			}
 		}
 		return false;
 	}
 	
-	public static void showPath() {
-//		for (Point p : pathOfBall) {
-//        	System.out.println(p);
+	public void showPath() {
+//		for (Point p : pathBall) {
+//        	System.out.println(p.x + p.y);
 //        }
+//		for(int i = 0; i < pathOfBall.length; i++) {
+//			System.out.println(pathOfBall[i].x + " " + pathOfBall[i].y);
+//		}
 		for(int i = 0; i < pathBall.length; i++) {
-			System.out.println(pathBall[i]);
+			System.out.println(pathBall[i].x + " " + pathBall[i].y);
 		}
 	}
-
-	public static ArrayList<Point> getPathOfBall() {
-		return pathOfBall;
-	}
-
-	public static void setPathOfBall(ArrayList<Point> pathOfBall) {
-		LineBall.pathOfBall = pathOfBall;
-	}
-	
 	
 }
 

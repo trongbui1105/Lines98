@@ -255,18 +255,21 @@ public class Line98 extends JFrame {
 		}
 	}
 	
-	public void moveBall(int i, int j, int i1, int j1) throws Exception {
-		lineBall.ball[i1][j1] = lineBall.ball[i][j] - 10;
-		lineBall.ball[i][j] = 0;
+	public void moveBall(int si, int sj, int fi, int fj) throws Exception {
+		lineBall.ball[fi][fj] = lineBall.ball[si][sj] - 10;
+		lineBall.ball[si][sj] = 0;
 		for (int k = 0; k < 16; k++) {
-			if (button[i][j].getIcon() == icon[k]) {
-				button[i1][j1].setIcon(icon[k - 10]);
+			if (button[si][sj].getIcon() == icon[k]) {
+				button[fi][fj].setIcon(icon[k - 10]);
 			}
-			button[i][j].setIcon(icon[0]);
+			button[si][sj].setIcon(icon[0]);
 		}
+//		System.out.println(si + " " + sj);
+//		System.out.println(fi + " " + fj);
 //		for (LineBall.Point p : lineBall.getPathOfBall()) {
 //			button[p.x][p.y].setIcon(button[i][j].getIcon());
 //		}
+		lineBall.showPath();
 	}
 	
 	
