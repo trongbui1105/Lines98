@@ -13,7 +13,7 @@ public class Line98 extends JFrame {
 	public int numOfPlayer = player.countPlayer();
 	public TopScores topScores = new TopScores();
 	public Icon icon[] = new Icon[22];
-	public static JButton button[][] = new JButton[9][9];
+	public JButton button[][] = new JButton[9][9];
 	public JMenuItem nextBall[] = new JMenuItem[3];
 	public JMenuItem score = new JMenuItem("0"); 
 	public int x = -1, y = -1;
@@ -263,8 +263,10 @@ public class Line98 extends JFrame {
 				button[i1][j1].setIcon(icon[k - 10]);
 			}
 			button[i][j].setIcon(icon[0]);
-			
 		}
+//		for (LineBall.Point p : lineBall.getPathOfBall()) {
+//			button[p.x][p.y].setIcon(button[i][j].getIcon());
+//		}
 	}
 	
 	
@@ -298,7 +300,7 @@ public class Line98 extends JFrame {
 					public void windowClosing(WindowEvent e) {
 						startGame();
 					}
-				});
+				}); 
 			}
 		}
 	}
@@ -311,7 +313,7 @@ public class Line98 extends JFrame {
 		startGame();
 	}
 
-	public static JButton[][] getButton() {
+	public JButton[][] getButton() {
 		return button;
 	}
 

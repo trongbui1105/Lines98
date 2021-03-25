@@ -1,12 +1,17 @@
 package Line98;
 
 import java.awt.*;
+
 import javax.swing.*;
+
+import Line98.LineBall.Point;
+
 import java.awt.event.*;
 import java.util.*;
 
 public class LineBall {
 	public Line98 line;
+	
 	
 	public class Point {
 		public int x, y;
@@ -16,16 +21,18 @@ public class LineBall {
 		}
 	}
 	
-	public final int maxCell = 9;
+	public final static int maxCell = 9; 
     public final int maxColor = 5;
     public int ball[][]= new int[maxCell][maxCell];
     public int ballTemp[][] = new int[maxCell][maxCell];
-	public Point[] pathBall = new Point[maxCell * maxCell];
+	public static Point[] pathBall = new Point[maxCell * maxCell];
 	public int nextColor[] = new int[3];
 	public int nextColorTemp[] = new int[3];
 	public int numOfCountPath;
 	public double totalResult, totalResultTemp;
 	boolean gameOver;
+	public static ArrayList<Point> pathOfBall;
+	public Icon icon = new ImageIcon();
 	
 	public LineBall() {
 		
@@ -309,6 +316,7 @@ public class LineBall {
 		int []di = {-1, 1, 0, 0};
 		int []dj = {0, 0, -1, 1};
 		int i, j, k, numOfCount;
+		int n = 0;
 		Point pStart, pFinish, pCurrent;
 		Point [][] query = new Point[2][maxCell * maxCell];
 		Point [][] pathBallTemp = new Point[maxCell][maxCell];
@@ -317,9 +325,8 @@ public class LineBall {
 		
 		pStart = new Point(si, sj);
 		pFinish = new Point(fi, fj);
-		JButton[][] button = Line98.getButton();
-		Icon icon = button[si][sj].getIcon();
-		
+//		JButton[][] button = Line98.getButton();
+//		icon = button[pStart.x][pStart.y].getIcon();
 		// cho pstart vào hàng đợi
 		int numOfQuery = 1;
 		query[0][0] = pStart;
@@ -338,7 +345,6 @@ public class LineBall {
 		if (ballCheck[fi][fj]) {
 			return false;
 		}
-		
 		// BFS tìm đường đi
 		pathBallTemp[si][sj] = new Point(-1, -1);
 		while (numOfQuery > 0) {
@@ -352,14 +358,7 @@ public class LineBall {
 					if (i >= 0 && i < maxCell && j >= 0 && j < maxCell && !ballCheck[i][j]) {
 						query[1][numOfCount++] = new Point(i, j);
 						ballCheck[i][j] = true;
-						button[i][j].setIcon(icon);
-						try {
-							repaint();
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+//						pathOfBall.add(new Point(i, j));
 						pathBallTemp[i][j] = new Point(pCurrent.x, pCurrent.y); 
 						// tìm thấy ô đích thì ngưng tìm kiếm
 						if (ballCheck[fi][fj]) {
@@ -378,6 +377,25 @@ public class LineBall {
 		}
 		return false;
 	}
+	
+	public static void showPath() {
+//		for (Point p : pathOfBall) {
+//        	System.out.println(p);
+//        }
+		for(int i = 0; i < pathBall.length; i++) {
+			System.out.println(pathBall[i]);
+		}
+	}
+
+	public static ArrayList<Point> getPathOfBall() {
+		return pathOfBall;
+	}
+
+	public static void setPathOfBall(ArrayList<Point> pathOfBall) {
+		LineBall.pathOfBall = pathOfBall;
+	}
+	
+	
 }
 
 

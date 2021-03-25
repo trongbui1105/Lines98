@@ -27,7 +27,7 @@ public class TopScores extends JFrame {
 		scrollPane = new JScrollPane(panel);
 		add(scrollPane);
 		setResizable(false);
-	}
+	} 
 
 	
 	public void showTopScores() {
