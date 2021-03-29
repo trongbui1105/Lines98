@@ -2,6 +2,9 @@ package Line98;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import Line98.LineBall.Point;
+
 import java.io.*;
 import java.sql.SQLException;
 
@@ -17,23 +20,7 @@ public class Line98 extends JFrame {
 	public JMenuItem nextBall[] = new JMenuItem[3];
 	public JMenuItem score = new JMenuItem("0"); 
 	public int x = -1, y = -1;
-
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Line98 frame = new Line98();
-//					frame.startGame();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+	public final int maxCell = 9; 
 
 	/**
 	 * Create the frame.
@@ -256,7 +243,12 @@ public class Line98 extends JFrame {
 	}
 	
 	public void moveBall(int si, int sj, int fi, int fj) throws Exception {
+		Point[] path = new Point[maxCell * maxCell];
+		path = lineBall.getPathBall();
 		lineBall.ball[fi][fj] = lineBall.ball[si][sj] - 10;
+		for(int i = 1; i < path.length - 1; i++) {
+			lineBall.ball[path[i].x][path[i].y] = lineBall.ball[fi][fj];
+		}
 		lineBall.ball[si][sj] = 0;
 		for (int k = 0; k < 16; k++) {
 			if (button[si][sj].getIcon() == icon[k]) {
@@ -264,12 +256,12 @@ public class Line98 extends JFrame {
 			}
 			button[si][sj].setIcon(icon[0]);
 		}
-//		System.out.println(si + " " + sj);
-//		System.out.println(fi + " " + fj);
-//		for (LineBall.Point p : lineBall.getPathOfBall()) {
-//			button[p.x][p.y].setIcon(button[i][j].getIcon());
-//		}
-		lineBall.showPath();
+		for(int i = 0; i < path.length; i++) {
+			System.out.println(path[i].x + " " + path[i].y);
+		}
+		
+
+		
 	}
 	
 	
