@@ -7,6 +7,7 @@ import Line98.LineBall.Point;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Line98 extends JFrame {
 	
@@ -21,6 +22,8 @@ public class Line98 extends JFrame {
 	public JMenuItem score = new JMenuItem("0"); 
 	public int x = -1, y = -1;
 	public final int maxCell = 9; 
+	public Thread moveThread;
+	public boolean checkMove = false;
 
 	/**
 	 * Create the frame.
@@ -177,11 +180,13 @@ public class Line98 extends JFrame {
 				if (lineBall.ball[i][j] > 10) {
 					lineBall.ball[i][j] -= 10;
 				}
+//				button[i][j].setIcon(icon[lineBall.ball[i][j]]);
 			}
 		}
 		
 		if (x >= 0 && y >= 0) {
 			lineBall.ball[x][y] += 10;
+//			button[x][y].setIcon(icon[lineBall.ball[x][y]]);
 		}
 		drawBall();
 	}
@@ -213,15 +218,17 @@ public class Line98 extends JFrame {
 											try {
 												moveBall(x, y, i, j);
 											} catch (Exception e) {
-												// TODO: handle exception
+												// TODO Auto-generated catch block
+												e.printStackTrace();
 											}
+
 											drawBall();
-											if (!lineBall.cutBall()) {
+											if (!lineBall.cutBall() && checkMove) {
 												lineBall.new3Balls();
 											}
 											lineBall.cutBall();
 											displayNextBall();
-											drawBall();
+//											drawBall();
 											x = y = -1;
 										}
 									}
@@ -243,24 +250,78 @@ public class Line98 extends JFrame {
 	}
 	
 	public void moveBall(int si, int sj, int fi, int fj) throws Exception {
-		Point[] path = new Point[maxCell * maxCell];
-		path = lineBall.getPathBall();
-		lineBall.ball[fi][fj] = lineBall.ball[si][sj] - 10;
-		for(int i = 1; i < path.length - 1; i++) {
-			lineBall.ball[path[i].x][path[i].y] = lineBall.ball[fi][fj];
-		}
+		int startPoint = lineBall.ball[si][sj] - 10;
 		lineBall.ball[si][sj] = 0;
-		for (int k = 0; k < 16; k++) {
-			if (button[si][sj].getIcon() == icon[k]) {
-				button[fi][fj].setIcon(icon[k - 10]);
+		button[si][sj].setIcon(icon[lineBall.ball[si][sj]]);
+		ArrayList<Point> listSmallBall = new ArrayList<>();
+		moveThread = new Thread(() -> {
+			ArrayList<Point> path = new ArrayList<>();
+			path = lineBall.getPathBall();
+			for (int k = 2; k < path.size(); k++) {
+				Point pos = path.get(k);
+//				System.out.println(lineBall.ball[pos.x][pos.y]);
+				if (lineBall.ball[pos.x][pos.y] == 0) {
+					lineBall.ball[pos.x][pos.y] = startPoint;
+					button[pos.x][pos.y].setIcon(icon[startPoint]);
+					repaint();
+				} else {
+					listSmallBall.add(pos);
+				}
+				
+				try {
+					Thread.sleep(25);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+//				if (k != path.size() - 1) {
+//					lineBall.ball[pos.x][pos.y] = 0;
+//					button[pos.x][pos.y].setIcon(icon[0]);
+//					repaint();
+//				}
+//				try {
+//					Thread.sleep(40);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
-			button[si][sj].setIcon(icon[0]);
-		}
-		for(int i = 0; i < path.length; i++) {
-			System.out.println(path[i].x + " " + path[i].y);
-		}
-		
+			
+			for(int i = 0; i < listSmallBall.size(); i++) {
+				System.out.println("test: " + listSmallBall.get(i).x + " " + listSmallBall.get(i).y);
+			}
+			for (int k = 2; k < path.size(); k++) {
+				Point pos = path.get(k);
+				if (k != path.size() - 1) {
+					for (int n = 0; n < listSmallBall.size(); n++) {
+						if (pos.x != listSmallBall.get(n).x || pos.y != listSmallBall.get(n).y) {
+							lineBall.ball[pos.x][pos.y] = 0;
+							button[pos.x][pos.y].setIcon(icon[0]);
+							repaint();
+						} else {
+							continue;
+						}
+					}
+				}
+			}
+		});
+		moveThread.start();
+		checkMove = true;
+//		lineBall.ball[fi][fj] = startPoint;
+//		button[fi][fj].setIcon(icon[startPoint]);
 
+//		for(int i = 0; i < path.size(); i++) {
+//			System.out.println(path.get(i).x + " " + path.get(i).y);
+//		}
+//		for(int i = 0; i < listSmallBall.size(); i++) {
+//			System.out.println("test: " + listSmallBall.get(i).x + " " + listSmallBall.get(i).y);
+//		}
+		
+//		for (int i = 0; i < 9; i++) {	
+//			for (int j = 0; j < 9; j++) {
+//				button[i][j].setIcon(icon[lineBall.ball[i][j]]);
+//			}
+//		}
 		
 	}
 	

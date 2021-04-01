@@ -26,7 +26,8 @@ public class LineBall {
     public final int maxColor = 5;
     public int ball[][]= new int[maxCell][maxCell];
     public int ballTemp[][] = new int[maxCell][maxCell];
-	public Point[] pathBall = new Point[maxCell * maxCell];
+//	public Point[] pathBall = new Point[maxCell * maxCell];
+    public ArrayList<Point> pathBall = new ArrayList<>();
 //	public Point[] pathOfBall = new Point[maxCell * maxCell];
 	public ArrayList<Point> listPathBall;
 	public int nextColor[] = new int[3];
@@ -305,13 +306,15 @@ public class LineBall {
 	
 	// save path
 	public void findPath(Point p, Point [][] pathBallTemp) {
-		pathBall = new Point[maxCell * maxCell];
+//		pathBall = new Point[maxCell * maxCell];
+		pathBall = new ArrayList<Point>();
 		if (p.x != -1 && p.y != -1) {
 			if (pathBallTemp[p.x][p.y] != new Point(-1, -1)) {
 				findPath(pathBallTemp[p.x][p.y], pathBallTemp);
 			}
 		}
-		pathBall[numOfCountPath++] = p;
+//		pathBall[numOfCountPath++] = p;
+		pathBall.add(p);
 	}
 	
 	// tìm đường đi ngắn nhất từ (si, sj) -> (fi, fj)
@@ -362,7 +365,7 @@ public class LineBall {
 						pathBallTemp[i][j] = new Point(pCurrent.x, pCurrent.y); 
 						// tìm thấy ô đích thì ngưng tìm kiếm
 						if (ballCheck[fi][fj]) {
-							numOfCountPath = 0;
+//							numOfCountPath = 0;
 							findPath(new Point(fi, fj), pathBallTemp);
 							return true;
 						}
@@ -381,16 +384,16 @@ public class LineBall {
 	
 	
 	public void showPath() {
-		for(int i = 0; i < pathBall.length; i++) {
-			System.out.println(pathBall[i].x + " " + pathBall[i].y);
+		for(int i = 0; i < pathBall.size(); i++) {
+			System.out.println(pathBall.get(i).x + " " + pathBall.get(i).y);
 		}
 	}
 
-	public Point[] getPathBall() {
+	public ArrayList<Point> getPathBall() {
 		return pathBall;
 	}
 
-	public void setPathBall(Point[] pathBall) {
+	public void setPathBall(ArrayList<Point> pathBall) {
 		this.pathBall = pathBall;
 	}
 }

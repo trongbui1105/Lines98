@@ -11,8 +11,6 @@ public class PlayGame {
 		// TODO Auto-generated method stub
 		Line98 app = new Line98();
         app.startGame();  
-//        app.showPath();
-//        LineBall.showPath();
 	} 
 
 }
