@@ -337,7 +337,7 @@ public class LineBall {
 		// đánh dấu các ô đã có bóng
 		for (i = 0; i < maxCell; i++) {
 			for (j = 0; j < maxCell; j++) {
-				if (ball[i][j] > 0 & ball[i][j] < 8) {
+				if (ball[i][j] > 0 & ball[i][j] < 6) {
 					ballCheck[i][j] = true;
 				} else {
 					ballCheck[i][j] = false;
@@ -395,6 +395,16 @@ public class LineBall {
 
 	public void setPathBall(ArrayList<Point> pathBall) {
 		this.pathBall = pathBall;
+	}
+	
+	public void numBall() {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				if (ball[i][j] != 0) {
+					System.out.println(i + " " + j + ": " + ball[i][j]);
+				}
+			}
+		}
 	}
 }
 
