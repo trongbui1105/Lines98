@@ -26,16 +26,16 @@ public class LineBall {
     public final int maxColor = 5;
     public int ball[][]= new int[maxCell][maxCell];
     public int ballTemp[][] = new int[maxCell][maxCell];
-//	public Point[] pathBall = new Point[maxCell * maxCell];
     public ArrayList<Point> pathBall = new ArrayList<>();
-//	public Point[] pathOfBall = new Point[maxCell * maxCell];
 	public ArrayList<Point> listPathBall;
+	public ArrayList<Point> listCutBall;
 	public int nextColor[] = new int[3];
 	public int nextColorTemp[] = new int[3];
 	public int numOfCountPath;
 	public double totalResult, totalResultTemp;
 	boolean gameOver;
 	public Icon icon = new ImageIcon();
+	
 	
 	public LineBall() {
 		
@@ -294,9 +294,13 @@ public class LineBall {
 				}
 			}
 		}
+		
+		listCutBall = new ArrayList<>();
 		for (i = 0; i < numOfCutBall; i++) {
-			ball[cellBall[i].x][cellBall[i].y] = 0;
+//			ball[cellBall[i].x][cellBall[i].y] = 0;
+			listCutBall.add(cellBall[i]);
 		}
+
 		if (numOfCutBall > 0) {
 			return true;
 		} else {
@@ -397,6 +401,14 @@ public class LineBall {
 		this.pathBall = pathBall;
 	}
 	
+	public ArrayList<Point> getListCutBall() {
+		return listCutBall;
+	}
+
+	public void setListCutBall(ArrayList<Point> listCutBall) {
+		this.listCutBall = listCutBall;
+	}
+
 	public void numBall() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {

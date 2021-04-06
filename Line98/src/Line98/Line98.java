@@ -22,7 +22,7 @@ public class Line98 extends JFrame {
 	public JMenuItem score = new JMenuItem("0"); 
 	public int x = -1, y = -1, startPoint;
 	public final int maxCell = 9; 
-	public Thread moveThread;
+	public Thread moveThread, cutBallThread;
 	public boolean checkMove = false;
 
 	/**
@@ -229,6 +229,7 @@ public class Line98 extends JFrame {
 												lineBall.new3Balls();
 											}
 											lineBall.cutBall();
+											cutBall();
 											displayNextBall();
 //											drawBall();
 											x = y = -1;
@@ -252,6 +253,9 @@ public class Line98 extends JFrame {
 	}
 	
 	public void moveBall(int si, int sj, int fi, int fj) {
+		if (moveThread != null && moveThread.isAlive()) {
+			return;
+		}
 		startPoint = lineBall.ball[si][sj] - 10;
 		lineBall.ball[si][sj] = 0;
 		button[si][sj].setIcon(icon[lineBall.ball[si][sj]]);
@@ -276,25 +280,47 @@ public class Line98 extends JFrame {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-
 				}
 
 				for(int i = 0; i < listSmallBall.size(); i++) {
 					System.out.println("test: " + listSmallBall.get(i).x + " " + listSmallBall.get(i).y);
 				}
+//				for (int k = 2; k < path.size() - 1; k++) {
+//					Point pos = path.get(k);
+//					if (listSmallBall.size() == 0) {
+//						lineBall.ball[pos.x][pos.y] = 0;
+//						button[pos.x][pos.y].setIcon(icon[0]);
+//					} else {
+//						for (int n = 0; n < listSmallBall.size(); n++) {
+//							Point pos1 = listSmallBall.get(n);
+//							if (pos.x == pos1.x && pos.y == pos1.y) {
+//								continue;
+//							} else {
+//								if (lineBall.ball[pos.x][pos.y] == startPoint) {
+//									lineBall.ball[pos.x][pos.y] = 0;
+//									button[pos.x][pos.y].setIcon(icon[0]);
+//								}
+//							}
+//						}
+//					}
+//				}
 				for (int k = 2; k < path.size() - 1; k++) {
 					Point pos = path.get(k);
-					if (listSmallBall.size() > 0) {
-						for (int n = 0; n < listSmallBall.size(); n++) {
-							if (pos.x != listSmallBall.get(n).x || pos.y != listSmallBall.get(n).y) {
-								lineBall.ball[pos.x][pos.y] = 0;
-								button[pos.x][pos.y].setIcon(icon[0]);
-							}
-						}
-					} else {
+					if (listSmallBall.size() == 0) {
 						lineBall.ball[pos.x][pos.y] = 0;
 						button[pos.x][pos.y].setIcon(icon[0]);
+					} else {
+						for (int n = 0; n < listSmallBall.size(); n++) {
+							Point pos1 = listSmallBall.get(n);
+							if (pos.x == pos1.x && pos.y == pos1.y) {
+								continue;
+							} else {
+								if (lineBall.ball[pos.x][pos.y] == startPoint) {
+									lineBall.ball[pos.x][pos.y] = 0;
+									button[pos.x][pos.y].setIcon(icon[0]);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -303,11 +329,38 @@ public class Line98 extends JFrame {
 
 		lineBall.ball[fi][fj] = startPoint;
 		button[fi][fj].setIcon(icon[lineBall.ball[fi][fj]]);
-		moveThread = new Thread();
-		if (!moveThread.isAlive()) {
-			checkMove = true;
-			System.out.println("not alive");
+		
+		checkMove = true;
+	}
+	
+	public void cutBall() {
+		ArrayList<Point> listCutBall = lineBall.getListCutBall();
+		if (checkMove) {
+			cutBallThread = new Thread(() -> {
+				try {
+					Thread.sleep(lineBall.getPathBall().size() * 50);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				for (int i = 0; i < listCutBall.size(); i++) {
+					Point pos = listCutBall.get(i);
+					System.out.println(pos.x + " " + pos.y);
+					lineBall.ball[pos.x][pos.y] = 0;
+					button[pos.x][pos.y].setIcon(icon[0]);
+					repaint();
+					
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+			cutBallThread.start();
 		}
+		
 	}
 
 	
