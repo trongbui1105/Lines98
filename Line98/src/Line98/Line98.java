@@ -1,7 +1,15 @@
 package Line98;
 import java.awt.*;
 import java.awt.event.*;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
+
+import com.sun.tools.javac.Main;
 
 import Line98.LineBall.Point;
 
@@ -64,7 +72,6 @@ public class Line98 extends JFrame {
 		
 		setMenu();
 		setButton();
-		lineBall.numBall();
 		setTitle("Lines 98");
 		GridLayout gridLayout = new GridLayout(9, 9);
 	    gridLayout.setHgap(-4);
@@ -75,7 +82,7 @@ public class Line98 extends JFrame {
 		setResizable(false);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		playSound("src/sound/BACKGROUND.wav");
 	}
 	
 	public void setMenu() {
@@ -182,13 +189,11 @@ public class Line98 extends JFrame {
 				if (lineBall.ball[i][j] > 10) {
 					lineBall.ball[i][j] -= 10;
 				}
-//				button[i][j].setIcon(icon[lineBall.ball[i][j]]);
 			}
 		}
 		
 		if (x >= 0 && y >= 0) {
 			lineBall.ball[x][y] += 10;
-//			button[x][y].setIcon(icon[lineBall.ball[x][y]]);
 		}
 		drawBall();
 	}
@@ -202,6 +207,7 @@ public class Line98 extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent ae) {
 						// TODO Auto-generated method stub
+						playSound("src/sound/CLICK.wav");
 						for (int i = 0; i < 9; i++) {
 							for (int j = 0; j < 9; j++) {
 								if (ae.getSource() == button[i][j]) {
@@ -223,18 +229,22 @@ public class Line98 extends JFrame {
 												// TODO Auto-generated catch block
 												e.printStackTrace();
 											}
-
+											
 											drawBall();
 											if (!lineBall.cutBall() && checkMove) {
 												lineBall.new3Balls();
+											} else if (lineBall.cutBall()) {
+												lineBall.cutBall();
+												cutBall();
 											}
-											lineBall.cutBall();
-											cutBall();
 											displayNextBall();
-//											drawBall();
+											drawBall();
 											x = y = -1;
+										} else {
+											playSound("src/sound/CANTMOVE.WAV");
 										}
 									}
+									
 									bounceBall();
 									player.scores=(int) lineBall.totalResult;
 									score.setText((int) lineBall.totalResult + "  ");
@@ -250,6 +260,10 @@ public class Line98 extends JFrame {
 				});
 			}
 		}
+	}
+	
+	public void new3Balls() {
+		lineBall.new3Balls();
 	}
 	
 	public void moveBall(int si, int sj, int fi, int fj) {
@@ -275,35 +289,18 @@ public class Line98 extends JFrame {
 					}
 
 					try {
-						Thread.sleep(50);
+						Thread.sleep(70);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-
-				for(int i = 0; i < listSmallBall.size(); i++) {
-					System.out.println("test: " + listSmallBall.get(i).x + " " + listSmallBall.get(i).y);
+				
+				Boolean[] saveSmallBall = new Boolean[path.size()];
+				for (int i = 0; i < saveSmallBall.length; i++) {
+					saveSmallBall[i] = false;
 				}
-//				for (int k = 2; k < path.size() - 1; k++) {
-//					Point pos = path.get(k);
-//					if (listSmallBall.size() == 0) {
-//						lineBall.ball[pos.x][pos.y] = 0;
-//						button[pos.x][pos.y].setIcon(icon[0]);
-//					} else {
-//						for (int n = 0; n < listSmallBall.size(); n++) {
-//							Point pos1 = listSmallBall.get(n);
-//							if (pos.x == pos1.x && pos.y == pos1.y) {
-//								continue;
-//							} else {
-//								if (lineBall.ball[pos.x][pos.y] == startPoint) {
-//									lineBall.ball[pos.x][pos.y] = 0;
-//									button[pos.x][pos.y].setIcon(icon[0]);
-//								}
-//							}
-//						}
-//					}
-//				}
+				
 				for (int k = 2; k < path.size() - 1; k++) {
 					Point pos = path.get(k);
 					if (listSmallBall.size() == 0) {
@@ -313,9 +310,9 @@ public class Line98 extends JFrame {
 						for (int n = 0; n < listSmallBall.size(); n++) {
 							Point pos1 = listSmallBall.get(n);
 							if (pos.x == pos1.x && pos.y == pos1.y) {
-								continue;
+								saveSmallBall[k] = true;
 							} else {
-								if (lineBall.ball[pos.x][pos.y] == startPoint) {
+								if (lineBall.ball[pos.x][pos.y] == startPoint && !saveSmallBall[k]) {
 									lineBall.ball[pos.x][pos.y] = 0;
 									button[pos.x][pos.y].setIcon(icon[0]);
 								}
@@ -326,11 +323,12 @@ public class Line98 extends JFrame {
 			}
 		});
 		moveThread.start();
-
+		
 		lineBall.ball[fi][fj] = startPoint;
 		button[fi][fj].setIcon(icon[lineBall.ball[fi][fj]]);
 		
 		checkMove = true;
+		playSound("src/sound/MOVE.WAV");
 	}
 	
 	public void cutBall() {
@@ -338,25 +336,25 @@ public class Line98 extends JFrame {
 		if (checkMove) {
 			cutBallThread = new Thread(() -> {
 				try {
-					Thread.sleep(lineBall.getPathBall().size() * 50);
+					Thread.sleep(lineBall.getPathBall().size() * 70 + 100);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				for (int i = 0; i < listCutBall.size(); i++) {
 					Point pos = listCutBall.get(i);
-					System.out.println(pos.x + " " + pos.y);
 					lineBall.ball[pos.x][pos.y] = 0;
 					button[pos.x][pos.y].setIcon(icon[0]);
 					repaint();
 					
 					try {
-						Thread.sleep(50);
+						Thread.sleep(60);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
+				playSound("src/sound/DESTROY.wav");
 			});
 			cutBallThread.start();
 		}
@@ -416,6 +414,45 @@ public class Line98 extends JFrame {
 		this.button = button;
 	}
 	
+//	public static synchronized void playSound(final String url) {
+//		  new Thread(new Runnable() {
+//		    public void run() {
+//		      try {
+//		        Clip clip = AudioSystem.getClip();
+//		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+//		          Main.class.getResourceAsStream("sounds/" + url));
+//		        clip.open(inputStream);
+//		        clip.start(); 
+//		      } catch (Exception e) {
+//		        System.err.println(e.getMessage());
+//		      }
+//		    }
+//		  }).start();
+//		}
+	void playSound(String soundFile) {
+	    File f = new File("./" + soundFile);
+	    AudioInputStream audioIn = null;
+		try {
+			audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
+		} catch (UnsupportedAudioFileException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+	    Clip clip = null;
+		try {
+			clip = AudioSystem.getClip();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    try {
+			clip.open(audioIn);
+		} catch (LineUnavailableException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    clip.start();
+	}
 	
 }
 
