@@ -310,14 +310,12 @@ public class LineBall {
 	
 	// save path
 	public void findPath(Point p, Point [][] pathBallTemp) {
-//		pathBall = new Point[maxCell * maxCell];
 		pathBall = new ArrayList<Point>();
 		if (p.x != -1 && p.y != -1) {
 			if (pathBallTemp[p.x][p.y] != new Point(-1, -1)) {
 				findPath(pathBallTemp[p.x][p.y], pathBallTemp);
 			}
 		}
-//		pathBall[numOfCountPath++] = p;
 		pathBall.add(p);
 	}
 	
@@ -369,7 +367,6 @@ public class LineBall {
 						pathBallTemp[i][j] = new Point(pCurrent.x, pCurrent.y); 
 						// tìm thấy ô đích thì ngưng tìm kiếm
 						if (ballCheck[fi][fj]) {
-//							numOfCountPath = 0;
 							findPath(new Point(fi, fj), pathBallTemp);
 							return true;
 						}
@@ -409,15 +406,6 @@ public class LineBall {
 		this.listCutBall = listCutBall;
 	}
 
-	public void numBall() {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				if (ball[i][j] != 0) {
-					System.out.println(i + " " + j + ": " + ball[i][j]);
-				}
-			}
-		}
-	}
 }
 
 

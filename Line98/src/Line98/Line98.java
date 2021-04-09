@@ -30,8 +30,9 @@ public class Line98 extends JFrame {
 	public JMenuItem score = new JMenuItem("0"); 
 	public int x = -1, y = -1, startPoint;
 	public final int maxCell = 9; 
-	public Thread moveThread, cutBallThread;
+	public Thread moveThread, cutBallThread, newBallThread;
 	public boolean checkMove = false;
+	public int numOfPoint;
 
 	/**
 	 * Create the frame.
@@ -248,11 +249,11 @@ public class Line98 extends JFrame {
 									bounceBall();
 									player.scores=(int) lineBall.totalResult;
 									score.setText((int) lineBall.totalResult + "  ");
-//									try {
-//										stopGame();
-//									} catch (IOException e) {
-//										// TODO: handle exception
-//									}
+									try {
+										stopGame();
+									} catch (IOException e) {
+										// TODO: handle exception
+									}
 								}
 							}
 						}
@@ -261,10 +262,7 @@ public class Line98 extends JFrame {
 			}
 		}
 	}
-	
-	public void new3Balls() {
-		lineBall.new3Balls();
-	}
+
 	
 	public void moveBall(int si, int sj, int fi, int fj) {
 		if (moveThread != null && moveThread.isAlive()) {
@@ -278,6 +276,7 @@ public class Line98 extends JFrame {
 			public void run() {
 				ArrayList<Point> path = new ArrayList<>();
 				path = lineBall.getPathBall();
+				numOfPoint = path.size();
 				for (int k = 2; k < path.size() - 1; k++) {
 					Point pos = path.get(k);
 					if (lineBall.ball[pos.x][pos.y] == 0) {
@@ -372,29 +371,27 @@ public class Line98 extends JFrame {
 	
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void stopGame() throws IOException {
 		if (lineBall.gameOver) {
-			boolean checkPoint = false;
-			if (checkPoint) {
-				player.saveGame();
-				topScores.showTopScores();
-				startGame();
-			} else {
-				gameOver = new JFrame("Game Over !!!");
-				JButton msg1 = new JButton("Trò Chơi Kết Thúc !");
-				JButton msg2 = new JButton("Bạn ghi được " + player.scores + " điểm");
-				gameOver.add(msg1);
-				gameOver.add(msg2);
-				gameOver.setLayout(new GridLayout(2, 1));
-				gameOver.setSize(290, 150);
-				gameOver.setResizable(false);
-				gameOver.show();
-				gameOver.addWindowListener(new WindowAdapter() {
-					public void windowClosing(WindowEvent e) {
-						startGame();
-					}
-				}); 
-			}
+			gameOver = new JFrame("Game Over !!!");
+			JButton msg1 = new JButton("Trò Chơi Kết Thúc !");
+			JButton msg2 = new JButton("Bạn ghi được " + player.scores + " điểm");
+
+			gameOver.add(msg1);
+			gameOver.add(msg2);
+			gameOver.setLayout(new GridLayout(2, 1));
+			gameOver.setSize(290, 150);
+			gameOver.setResizable(false);
+			gameOver.show();
+			
+			saveGame();
+			gameOver.hide();
+			gameOver.addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					startGame();
+				}
+			}); 
 		}
 	}
 	
@@ -413,22 +410,7 @@ public class Line98 extends JFrame {
 	public void setButton(JButton[][] button) {
 		this.button = button;
 	}
-	
-//	public static synchronized void playSound(final String url) {
-//		  new Thread(new Runnable() {
-//		    public void run() {
-//		      try {
-//		        Clip clip = AudioSystem.getClip();
-//		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-//		          Main.class.getResourceAsStream("sounds/" + url));
-//		        clip.open(inputStream);
-//		        clip.start(); 
-//		      } catch (Exception e) {
-//		        System.err.println(e.getMessage());
-//		      }
-//		    }
-//		  }).start();
-//		}
+
 	void playSound(String soundFile) {
 	    File f = new File("./" + soundFile);
 	    AudioInputStream audioIn = null;
